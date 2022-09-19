@@ -34,21 +34,37 @@
   </div>
 -->
   <div>
-    <div class="conatainer">
-      <h2></h2>
-      <div>
-        <input class="search-input" placeholder="文章搜尋" />
-        <button class="search-btn">search</button>
-      </div>
-      <span>{{ postCount }}則貼文</span>
-      <div class="post-cards">
-        <div class="post" v-for="post in cardlist" :key="post.id">
-          <img class="post-img" src="https://picsum.photos/600/300/?image=25" />
-          <h1 class="post-title">{{ post.title }}</h1>
-          <p class="post-content">
-            {{ post.body }}
-          </p>
-          <button class="post-btn" href="#" variant="primary">see more</button>
+    <div :class="{ mask: mask }">
+      <div class="card-container">
+        <h2></h2>
+        <div>
+          <input
+            class="search-input"
+            placeholder="文章搜尋"
+            v-model="keyword"
+          />
+          <button class="search-btn">search</button>
+        </div>
+        <span>{{ postCount }}則貼文</span>
+        <div class="post-cards">
+          <div class="post" v-for="post in cardlist" :key="post.id">
+            <img
+              class="post-img"
+              src="https://picsum.photos/600/300/?image=25"
+            />
+            <h1 class="post-title">{{ post.title }}</h1>
+            <p class="post-content">
+              {{ post.body }}
+            </p>
+            <button
+              class="post-btn"
+              href="#"
+              variant="primary"
+              @click="setNowPost(post)"
+            >
+              see more
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -56,10 +72,19 @@
 </template>
 
 <script>
+import PostView from "../components/PostView";
 export default {
   name: "PostCard",
+  comments: {
+    PostView,
+  },
   data() {
-    return {};
+    return {
+      mask: false,
+      post: Object,
+      thispost: Object,
+      show: true,
+    };
   },
   computed: {
     keyword: {
@@ -70,10 +95,19 @@ export default {
         this.$store.commit("setKeyword", val);
       },
     },
+    filterPosts() {
+      return this.$store.getters.filterPosts[1];
+    },
   },
   props: {
     cardlist: { type: Array },
     postCount: Number,
+  },
+  methods: {
+    setNowPost(val) {
+      this.show = false;
+      return this.$store.commit("setNowPost", val);
+    },
   },
 };
 </script>
@@ -111,7 +145,7 @@ div.post {
   border-radius: 10px;
   margin: 20px;
   padding: 10px;
-  width: 20%;
+  width: 25%;
   display: inline-block;
   height: 600px;
 }
@@ -145,5 +179,12 @@ div.post {
 .post-btn:hover {
   opacity: 0.7;
   width: 40%;
+}
+@media {
+  .mask {
+    /*     background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)); */
+    /* background-color: rgba(0, 0, 0, 0.3);*/
+    backdrop-filter: blur(5px);
+  }
 }
 </style>

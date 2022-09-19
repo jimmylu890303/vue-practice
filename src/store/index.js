@@ -68,6 +68,8 @@ export default new Vuex.Store({
       },
     ],
     keyword: "",
+    nowPost: Object,
+    show: true,
   },
   getters: {
     getPosts(state) {
@@ -83,11 +85,21 @@ export default new Vuex.Store({
     getPostCount(state) {
       return state.posts.length;
     },
+    getNowPost(state) {
+      return state.nowPost;
+    },
   },
   mutations: {
     setKeyword(state, payload) {
       state.keyword = payload;
       console.log(state.keyword);
+    },
+    setNowPost(state, payload) {
+      state.show = !state.show;
+      state.nowPost = payload;
+    },
+    setShow(state) {
+      state.show = !state.show;
     },
   },
   actions: {},
